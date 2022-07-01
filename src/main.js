@@ -1,3 +1,4 @@
+import "./css/index.css";
 import count from "./js/count.js";
 import sum from "./js/sum.js";
 
