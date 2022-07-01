@@ -5,10 +5,11 @@ module.exports = {
   entry: "./src/main.js", //相对路径
   // 输出
   output: {
-    // 文件的输出路径
+    // 所有文件的输出路径
     // __dirname是node.js的变量，代表当前文件的文件夹目录
     path: path.resolve(__dirname, "dist"), //绝对路径
-    filename: "mn.js", //文件名
+    // 入口文件打包输出文件名
+    filename: "static/js/mn.js", //文件名
   },
   // 加载器
   module: {
@@ -42,6 +43,10 @@ module.exports = {
             // 转换后体积会变大
             maxSize: 10 * 1024,
           },
+        },
+        generator: {
+          // 输出图片名称
+          filename: "static/images/[hash:10][ext][query]",
         },
       },
     ],
