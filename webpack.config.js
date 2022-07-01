@@ -53,7 +53,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(ttf|woff2?)$/,
+        test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
         type: "asset/resource",
         generator: {
           // 输出图片名称
