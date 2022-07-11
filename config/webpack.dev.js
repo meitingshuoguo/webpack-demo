@@ -8,13 +8,9 @@ module.exports = {
   // 输出
   output: {
     // 所有文件的输出路径
-    // __dirname是node.js的变量，代表当前文件的文件夹目录
-    path: path.resolve(__dirname, "dist"), //绝对路径
+    path: undefined, //绝对路径,开发模式不需要指定
     // 入口文件打包输出文件名
     filename: "static/js/mn.js", //文件名
-    // 自动清空上次打包的内容
-    // 原理：在打包前，将path整个目录内容清空，再进行打包
-    clean: true,
   },
   // 加载器
   module: {
@@ -78,12 +74,12 @@ module.exports = {
   plugins: [
     new ESLintPlugin({
       // 检测哪些文件
-      context: path.resolve(__dirname, "src"),
+      context: path.resolve(__dirname, "../src"),
     }),
     new HtmlWebpackPlugin({
       // 模版，以public/idnex.html文件创建新的html文件
       // 新的文件特点：1.结构和原来一致。2.会自动引入打包输出的资源
-      template: path.resolve(__dirname, "public/index.html"),
+      template: path.resolve(__dirname, "../public/index.html"),
     }),
   ],
   // 开发服务器：不会输出资源，在内存中编译打包。
