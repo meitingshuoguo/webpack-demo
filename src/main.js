@@ -7,4 +7,4 @@ import "./scss/index.scss";
 import "./stylus/index.styl";
 
 console.log(count(10, 5));
-console.log(sum(10, 5));
+console.log(sum(10, 51));
