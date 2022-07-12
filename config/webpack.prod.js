@@ -1,6 +1,7 @@
 const path = require("path"); //node.js的核心模块，专门用来处理路径问题
 const ESLintPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   // 入口
@@ -25,19 +26,19 @@ module.exports = {
         //执行顺序，从右往左。
         // style-loader 将js中css通过创建style标签添加到html文件中生效
         // css-loader 将css资源编译成commonjs的模块到js中
-        use: ["style-loader", "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.less$/,
-        use: ["style-loader", "css-loader", "less-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
       },
       {
         test: /\.s[ac]ss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
         test: /\.styl$/,
-        use: ["style-loader", "css-loader", "stylus-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"],
       },
       {
         test: /\.(png|jpe?g|gif|webp)$/,
@@ -84,6 +85,9 @@ module.exports = {
       // 模版，以public/idnex.html文件创建新的html文件
       // 新的文件特点：1.结构和原来一致。2.会自动引入打包输出的资源
       template: path.resolve(__dirname, "../public/index.html"),
+    }),
+    new MiniCssExtractPlugin({
+      filename: "static/css/main.css",
     }),
   ],
   // 模式
