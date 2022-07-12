@@ -3,6 +3,22 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+function getStyleLoader(preset) {
+  return [
+    MiniCssExtractPlugin.loader,
+    "css-loader",
+    {
+      loader: "postcss-loader",
+      options: {
+        postcssOptions: {
+          plugins: ["postcss-preset-env"],
+        },
+      },
+    },
+    preset,
+  ].filter(Boolean);
+}
+
 module.exports = {
   // 入口
   entry: "./src/main.js", //相对路径
@@ -26,66 +42,19 @@ module.exports = {
         //执行顺序，从右往左。
         // style-loader 将js中css通过创建style标签添加到html文件中生效
         // css-loader 将css资源编译成commonjs的模块到js中
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: ["postcss-preset-env"],
-              },
-            },
-          },
-        ],
+        use: getStyleLoader(),
       },
       {
         test: /\.less$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: ["postcss-preset-env"],
-              },
-            },
-          },
-          "less-loader",
-        ],
+        use: getStyleLoader("less-loader"),
       },
       {
         test: /\.s[ac]ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: ["postcss-preset-env"],
-              },
-            },
-          },
-          "sass-loader",
-        ],
+        use: getStyleLoader("sass-loader"),
       },
       {
         test: /\.styl$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: ["postcss-preset-env"],
-              },
-            },
-          },
-          "stylus-loader",
-        ],
+        use: getStyleLoader("stylus-loader"),
       },
       {
         test: /\.(png|jpe?g|gif|webp)$/,
