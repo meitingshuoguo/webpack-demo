@@ -15,58 +15,63 @@ module.exports = {
   // 加载器
   module: {
     rules: [
-      // loader的配置
       {
-        test: /\.css$/i, //判断要检测什么文件
-        //执行顺序，从右往左。
-        // style-loader 将js中css通过创建style标签添加到html文件中生效
-        // css-loader 将css资源编译成commonjs的模块到js中
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.less$/,
-        use: ["style-loader", "css-loader", "less-loader"],
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
-      },
-      {
-        test: /\.styl$/,
-        use: ["style-loader", "css-loader", "stylus-loader"],
-      },
-      {
-        test: /\.(png|jpe?g|gif|webp)$/,
-        type: "asset",
-        parser: {
-          dataUrlCondition: {
-            // 小于10kb的图片转base64
-            // 转换后体积会变大
-            maxSize: 10 * 1024,
+        // 每个文件只能被其中一个loader配置处理
+        oneOf: [
+          // loader的配置
+          {
+            test: /\.css$/i, //判断要检测什么文件
+            //执行顺序，从右往左。
+            // style-loader 将js中css通过创建style标签添加到html文件中生效
+            // css-loader 将css资源编译成commonjs的模块到js中
+            use: ["style-loader", "css-loader"],
           },
-        },
-        generator: {
-          // 输出图片名称
-          filename: "static/images/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
-        type: "asset/resource",
-        generator: {
-          // 输出图片名称
-          filename: "static/media/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
+          {
+            test: /\.less$/,
+            use: ["style-loader", "css-loader", "less-loader"],
           },
-        },
+          {
+            test: /\.s[ac]ss$/,
+            use: ["style-loader", "css-loader", "sass-loader"],
+          },
+          {
+            test: /\.styl$/,
+            use: ["style-loader", "css-loader", "stylus-loader"],
+          },
+          {
+            test: /\.(png|jpe?g|gif|webp)$/,
+            type: "asset",
+            parser: {
+              dataUrlCondition: {
+                // 小于10kb的图片转base64
+                // 转换后体积会变大
+                maxSize: 10 * 1024,
+              },
+            },
+            generator: {
+              // 输出图片名称
+              filename: "static/images/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
+            type: "asset/resource",
+            generator: {
+              // 输出图片名称
+              filename: "static/media/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env"],
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -87,6 +92,7 @@ module.exports = {
     host: "localhost",
     port: "3000",
     open: true, //开启自动打开浏览器
+    hot: true, //HMR,默认是开启的。
   },
   // 模式
   mode: "development",

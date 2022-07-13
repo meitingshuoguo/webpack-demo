@@ -37,58 +37,62 @@ module.exports = {
   // 加载器
   module: {
     rules: [
-      // loader的配置
       {
-        test: /\.css$/i, //判断要检测什么文件
-        //执行顺序，从右往左。
-        // style-loader 将js中css通过创建style标签添加到html文件中生效
-        // css-loader 将css资源编译成commonjs的模块到js中
-        use: getStyleLoader(),
-      },
-      {
-        test: /\.less$/,
-        use: getStyleLoader("less-loader"),
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: getStyleLoader("sass-loader"),
-      },
-      {
-        test: /\.styl$/,
-        use: getStyleLoader("stylus-loader"),
-      },
-      {
-        test: /\.(png|jpe?g|gif|webp)$/,
-        type: "asset",
-        parser: {
-          dataUrlCondition: {
-            // 小于10kb的图片转base64
-            // 转换后体积会变大
-            maxSize: 10 * 1024,
+        oneOf: [
+          // loader的配置
+          {
+            test: /\.css$/i, //判断要检测什么文件
+            //执行顺序，从右往左。
+            // style-loader 将js中css通过创建style标签添加到html文件中生效
+            // css-loader 将css资源编译成commonjs的模块到js中
+            use: getStyleLoader(),
           },
-        },
-        generator: {
-          // 输出图片名称
-          filename: "static/images/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
-        type: "asset/resource",
-        generator: {
-          // 输出图片名称
-          filename: "static/media/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
+          {
+            test: /\.less$/,
+            use: getStyleLoader("less-loader"),
           },
-        },
+          {
+            test: /\.s[ac]ss$/,
+            use: getStyleLoader("sass-loader"),
+          },
+          {
+            test: /\.styl$/,
+            use: getStyleLoader("stylus-loader"),
+          },
+          {
+            test: /\.(png|jpe?g|gif|webp)$/,
+            type: "asset",
+            parser: {
+              dataUrlCondition: {
+                // 小于10kb的图片转base64
+                // 转换后体积会变大
+                maxSize: 10 * 1024,
+              },
+            },
+            generator: {
+              // 输出图片名称
+              filename: "static/images/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
+            type: "asset/resource",
+            generator: {
+              // 输出图片名称
+              filename: "static/media/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env"],
+              },
+            },
+          },
+        ],
       },
     ],
   },

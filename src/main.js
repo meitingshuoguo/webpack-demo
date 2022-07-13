@@ -6,5 +6,9 @@ import "./less/index.less";
 import "./scss/index.scss";
 import "./stylus/index.styl";
 
-console.log(count(10, 5));
+console.log(count(10, 50));
 console.log(sum(10, 51));
+
+if (module.hot) {
+  module.hot.accept("./js/count.js");
+}
