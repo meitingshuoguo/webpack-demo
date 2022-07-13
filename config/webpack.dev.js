@@ -63,7 +63,8 @@ module.exports = {
           },
           {
             test: /\.m?js$/,
-            exclude: /node_modules/,
+            exclude: /node_modules/, //排除该文件夹下的文件
+            // include:path.resolve(__dirname,"../src") // 只处理该文件夹下的文件，只能同时用一种
             use: {
               loader: "babel-loader",
               options: {
@@ -80,6 +81,7 @@ module.exports = {
     new ESLintPlugin({
       // 检测哪些文件
       context: path.resolve(__dirname, "../src"),
+      exclude: "node_modules",
     }),
     new HtmlWebpackPlugin({
       // 模版，以public/idnex.html文件创建新的html文件
