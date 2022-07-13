@@ -69,6 +69,8 @@ module.exports = {
               loader: "babel-loader",
               options: {
                 presets: ["@babel/preset-env"],
+                cacheDirectory: true, //开启缓存
+                cacheCompression: false, //关闭缓存文件压缩
               },
             },
           },
@@ -82,6 +84,8 @@ module.exports = {
       // 检测哪些文件
       context: path.resolve(__dirname, "../src"),
       exclude: "node_modules",
+      cache: true,
+      cacheLocation: path.resolve(__dirname, "../node_modules/.cache/eslint"),
     }),
     new HtmlWebpackPlugin({
       // 模版，以public/idnex.html文件创建新的html文件
