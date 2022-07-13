@@ -1,8 +1,12 @@
+const os = require("os");
 const path = require("path"); //node.js的核心模块，专门用来处理路径问题
 const ESLintPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserWebpackPlugin = require("terser-webpack-plugin");
+
+const threads = os.cpus.length;
 
 function getStyleLoader(preset) {
   return [
@@ -85,14 +89,22 @@ module.exports = {
           {
             test: /\.m?js$/,
             exclude: /node_modules/,
-            use: {
-              loader: "babel-loader",
-              options: {
-                presets: ["@babel/preset-env"],
-                cacheDirectory: true, //开启缓存
-                cacheCompression: false, //关闭缓存文件压缩
+            use: [
+              {
+                loader: "thread-loader", //开启多进程
+                options: {
+                  works: threads, //进程数量
+                },
               },
-            },
+              {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env"],
+                  cacheDirectory: true, //开启缓存
+                  cacheCompression: false, //关闭缓存文件压缩
+                },
+              },
+            ],
           },
         ],
       },
@@ -106,6 +118,7 @@ module.exports = {
       exclude: "node_modules",
       cache: true,
       cacheLocation: path.resolve(__dirname, "../node_modules/.cache/eslint"),
+      threads, //开启多进程和设置数量
     }),
     new HtmlWebpackPlugin({
       // 模版，以public/idnex.html文件创建新的html文件
@@ -115,8 +128,18 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "static/css/main.css",
     }),
-    new CssMinimizerPlugin(),
   ],
+  optimization: {
+    // 压缩的操作
+    minimizer: [
+      // 压缩css
+      new CssMinimizerPlugin(),
+      // 压缩js
+      new TerserWebpackPlugin({
+        parallel: threads,
+      }),
+    ],
+  },
   // 模式
   mode: "production",
   devtool: "source-map",

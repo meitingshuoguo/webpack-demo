@@ -1,7 +1,9 @@
+const os = require("os");
 const path = require("path"); //node.js的核心模块，专门用来处理路径问题
 const ESLintPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const threads = os.cpus.length;
 module.exports = {
   // 入口
   entry: "./src/main.js", //相对路径
@@ -65,14 +67,22 @@ module.exports = {
             test: /\.m?js$/,
             exclude: /node_modules/, //排除该文件夹下的文件
             // include:path.resolve(__dirname,"../src") // 只处理该文件夹下的文件，只能同时用一种
-            use: {
-              loader: "babel-loader",
-              options: {
-                presets: ["@babel/preset-env"],
-                cacheDirectory: true, //开启缓存
-                cacheCompression: false, //关闭缓存文件压缩
+            use: [
+              {
+                loader: "thread-loader", //开启多进程
+                options: {
+                  works: threads, //进程数量
+                },
               },
-            },
+              {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env"],
+                  cacheDirectory: true, //开启缓存
+                  cacheCompression: false, //关闭缓存文件压缩
+                },
+              },
+            ],
           },
         ],
       },
@@ -86,6 +96,7 @@ module.exports = {
       exclude: "node_modules",
       cache: true,
       cacheLocation: path.resolve(__dirname, "../node_modules/.cache/eslint"),
+      threads,
     }),
     new HtmlWebpackPlugin({
       // 模版，以public/idnex.html文件创建新的html文件
