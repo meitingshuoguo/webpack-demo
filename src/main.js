@@ -1,3 +1,4 @@
+import "core-js/es/promise";
 import "./css/iconfont.css";
 import "./css/index.css";
 import count from "./js/count.js";
@@ -20,3 +21,9 @@ console.log(sum(10, 51));
 if (module.hot) {
   module.hot.accept("./js/count.js");
 }
+
+// 添加promise代码
+const promise = Promise.resolve();
+promise.then(() => {
+  console.log("hello promise");
+});
