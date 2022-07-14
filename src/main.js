@@ -9,7 +9,8 @@ import "./stylus/index.styl";
 
 document.getElementById("btn").onclick = function () {
   // eslint默认不支持动态导入语法
-  import("./js/math").then((res) => {
+  // webpack特殊命名
+  import(/* webpackChunkName: "math" */ "./js/math").then((res) => {
     console.log(res.mul(5, 6));
   });
 };

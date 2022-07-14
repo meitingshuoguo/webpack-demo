@@ -35,6 +35,7 @@ module.exports = {
     path: path.resolve(__dirname, "../dist"), //绝对路径
     // 入口文件打包输出文件名
     filename: "static/js/mn.js", //文件名
+    chunkFilename: "static/js/[name].js",
     // 自动清空上次打包的内容
     // 原理：在打包前，将path整个目录内容清空，再进行打包
     clean: true,
