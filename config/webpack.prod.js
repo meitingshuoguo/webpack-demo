@@ -34,8 +34,11 @@ module.exports = {
     // __dirname是node.js的变量，代表当前文件的文件夹目录
     path: path.resolve(__dirname, "../dist"), //绝对路径
     // 入口文件打包输出文件名
-    filename: "static/js/mn.js", //文件名
-    chunkFilename: "static/js/[name].js",
+    filename: "static/js/[name].js", //文件名
+    // 给打包输出的其他文件命名
+    chunkFilename: "static/js/[name].chunk.js",
+    // 图片、字体等通过type：asset处理资源命名方式
+    assetModuleFilename: "static/media/[hash:10][ext][query]",
     // 自动清空上次打包的内容
     // 原理：在打包前，将path整个目录内容清空，再进行打包
     clean: true,
@@ -75,18 +78,18 @@ module.exports = {
                 maxSize: 20 * 1024,
               },
             },
-            generator: {
-              // 输出图片名称
-              filename: "static/images/[hash:10][ext][query]",
-            },
+            // generator: {
+            //   // 输出图片名称
+            //   filename: "static/images/[hash:10][ext][query]",
+            // },
           },
           {
             test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
             type: "asset/resource",
-            generator: {
-              // 输出图片名称
-              filename: "static/media/[hash:10][ext][query]",
-            },
+            // generator: {
+            //   // 输出图片名称
+            //   filename: "static/media/[hash:10][ext][query]",
+            // },
           },
           {
             test: /\.m?js$/,
@@ -129,7 +132,8 @@ module.exports = {
       template: path.resolve(__dirname, "../public/index.html"),
     }),
     new MiniCssExtractPlugin({
-      filename: "static/css/main.css",
+      filename: "static/css/[name].css",
+      chunkFilename: "static/css/[name].chunk.css",
     }),
   ],
   optimization: {
