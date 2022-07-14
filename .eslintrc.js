@@ -1,7 +1,7 @@
 module.exports = {
   // 解析选项
   parserOptions: {
-    ecmaVersion: 6, //ES语法版本
+    ecmaVersion: 11, //ES语法版本
     sourceType: "module", //ES模块化
     ecmaFeatures: {
       jsx: true, //如果是React项目，就需要开启jsx语法
