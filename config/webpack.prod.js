@@ -35,9 +35,9 @@ module.exports = {
     // __dirname是node.js的变量，代表当前文件的文件夹目录
     path: path.resolve(__dirname, "../dist"), //绝对路径
     // 入口文件打包输出文件名
-    filename: "static/js/[name].js", //文件名
+    filename: "static/js/[name].[contenthash:10].js", //文件名
     // 给打包输出的其他文件命名
-    chunkFilename: "static/js/[name].chunk.js",
+    chunkFilename: "static/js/[name].chunk.[contenthash:10].js",
     // 图片、字体等通过type：asset处理资源命名方式
     assetModuleFilename: "static/media/[hash:10][ext][query]",
     // 自动清空上次打包的内容
@@ -184,6 +184,9 @@ module.exports = {
     splitChunks: {
       chunks: "all", // 对所有模块都进行分割
       // 其他内容用默认配置即可
+    },
+    runtimeChunk: {
+      name: (entrypoint) => `runtime~${entrypoint.name}.js`,
     },
   },
   // 模式
