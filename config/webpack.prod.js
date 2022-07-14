@@ -7,6 +7,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 const PreloadPlugin = require("preload-webpack-plugin");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
 const threads = os.cpus.length;
 
@@ -37,9 +38,9 @@ module.exports = {
     // 入口文件打包输出文件名
     filename: "static/js/[name].[contenthash:10].js", //文件名
     // 给打包输出的其他文件命名
-    chunkFilename: "static/js/[name].chunk.[contenthash:10].js",
+    chunkFilename: "static/js/[name].[contenthash:10].chunk.js",
     // 图片、字体等通过type：asset处理资源命名方式
-    assetModuleFilename: "static/media/[hash:10][ext][query]",
+    assetModuleFilename: "static/media/[name].[hash:10][ext][query]",
     // 自动清空上次打包的内容
     // 原理：在打包前，将path整个目录内容清空，再进行打包
     clean: true,
@@ -133,13 +134,19 @@ module.exports = {
       template: path.resolve(__dirname, "../public/index.html"),
     }),
     new MiniCssExtractPlugin({
-      filename: "static/css/[name].css",
-      chunkFilename: "static/css/[name].chunk.css",
+      filename: "static/css/[name].[contenthash:8].css",
+      chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
     }),
     new PreloadPlugin({
-      // rel: "preload",
-      // as: "script",
-      rel: "prefetch",
+      rel: "preload",
+      as: "script",
+      // rel: "prefetch",
+    }),
+    new WorkboxPlugin.GenerateSW({
+      // 这些选项帮助快速启用 ServiceWorkers
+      // 不允许遗留任何“旧的” ServiceWorkers
+      clientsClaim: true,
+      skipWaiting: true,
     }),
   ],
   optimization: {

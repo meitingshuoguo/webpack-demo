@@ -11,7 +11,7 @@ import "./stylus/index.styl";
 document.getElementById("btn").onclick = function () {
   // eslint默认不支持动态导入语法
   // webpack特殊命名
-  import(/* webpackChunkName: "math" */ "./js/math").then((res) => {
+  import(/* webpackChunkName: "math" */ "./js/math.js").then((res) => {
     console.log(res.mul(5, 6));
   });
 };
@@ -27,3 +27,16 @@ const promise = Promise.resolve();
 promise.then(() => {
   console.log("hello promise");
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("SW registered: ", registration);
+      })
+      .catch((registrationError) => {
+        console.log("SW registration failed: ", registrationError);
+      });
+  });
+}
