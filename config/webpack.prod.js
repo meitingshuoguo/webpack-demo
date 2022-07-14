@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const PreloadPlugin = require("preload-webpack-plugin");
 
 const threads = os.cpus.length;
 
@@ -134,6 +135,11 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "static/css/[name].css",
       chunkFilename: "static/css/[name].chunk.css",
+    }),
+    new PreloadPlugin({
+      // rel: "preload",
+      // as: "script",
+      rel: "prefetch",
     }),
   ],
   optimization: {
