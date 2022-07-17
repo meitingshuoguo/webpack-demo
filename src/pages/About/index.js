@@ -1,6 +1,0 @@
-import React from "react";
-import "./index.less";
-
-export default function Home() {
-  return <div className="about-title">About</div>;
-}
