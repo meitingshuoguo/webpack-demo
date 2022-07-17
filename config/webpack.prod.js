@@ -1,11 +1,15 @@
 const path = require("path");
 const EslintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
+const TerserWebpackPlugin = require("terser-webpack-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const getStyleLoaders = (pre) => {
   return [
-    "style-loader",
+    MiniCssExtractPlugin.loader,
     "css-loader",
     {
       // 处理css兼容性问题
@@ -24,10 +28,11 @@ const getStyleLoaders = (pre) => {
 module.exports = {
   entry: "./src/main.js",
   output: {
-    path: undefined,
-    filename: "static/js/[name].js",
-    chunkFilename: "static/js/[name].chunk.js",
+    path: path.resolve(__dirname, "../dist"),
+    filename: "static/js/[name].[contenthash:10].js",
+    chunkFilename: "static/js/[name].[contenthash:10].chunk.js",
     assetModuleFilename: "static/media/[hash:10][ext][query]",
+    clean: true,
   },
   module: {
     rules: [
@@ -71,7 +76,6 @@ module.exports = {
         options: {
           cacheDirectory: true,
           cacheCompression: false,
-          plugins: ["react-refresh/babel"],
         },
       },
     ],
@@ -88,10 +92,24 @@ module.exports = {
       template: path.resolve(__dirname, "../public/index.html"),
       favicon: path.resolve(__dirname, "../public/favicon.ico"),
     }),
-    new ReactRefreshPlugin(), //激活js的HMR
+    new MiniCssExtractPlugin({
+      filename: "static/css/[name].[contenthash:10].css",
+      chunkFilename: "static/css/[name].[contenthash:10].chunk.css",
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "../public"),
+          to: path.resolve(__dirname, "../dist"),
+          globOptions: {
+            ignore: ["**/index.html"],
+          },
+        },
+      ],
+    }),
   ],
-  mode: "development",
-  devtool: "cheap-module-source-map",
+  mode: "production",
+  devtool: "source-map",
   optimization: {
     splitChunks: {
       chunks: "all",
@@ -99,17 +117,41 @@ module.exports = {
     runtimeChunk: {
       name: (entrypoint) => `runtime~${entrypoint.name}.js`,
     },
+    minimizer: [
+      new CssMinimizerWebpackPlugin(),
+      new TerserWebpackPlugin(),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminGenerate,
+          options: {
+            plugins: [
+              ["gifsicle", { interlaced: true }],
+              ["jpegtran", { progressive: true }],
+              ["optipng", { optimizationLevel: 5 }],
+              [
+                "svgo",
+                {
+                  plugins: [
+                    "preset-default",
+                    "prefixIds",
+                    {
+                      name: "sortAttrs",
+                      params: {
+                        xmlnsOrder: "alphabetical",
+                      },
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+      }),
+    ],
   },
   // webpack解析模块加载选项
   resolve: {
     // 自动补全文件扩展名(你引入文件的时候如果没加扩展名才会生效)
     extensions: [".jsx", ".js", ".json"],
-  },
-  devServer: {
-    host: "localhost",
-    port: 4000,
-    open: false,
-    hot: true, //开启HMR
-    historyApiFallback: true, //解决前端路由刷新404
   },
 };
