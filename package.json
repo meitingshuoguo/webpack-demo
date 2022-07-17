@@ -44,6 +44,7 @@
     "webpack-dev-server": "^4.9.0"
   },
   "dependencies": {
+    "antd": "^4.21.6",
     "randombytes": "^2.1.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

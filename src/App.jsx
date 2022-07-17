@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 // import About from "./pages/About";
 // import Home from "./pages/Home";
+import { Button } from "antd";
 
 const Home = lazy(() => import(/* webpackChunkName: 'home' */ "./pages/Home"));
 const About = lazy(() =>
@@ -12,7 +13,7 @@ export default function App() {
   return (
     <div>
       <h1>App</h1>
-      <Home />
+      <Button type="primary">antd</Button>
       <ul>
         <li>
           <Link to="/home">Home</Link>

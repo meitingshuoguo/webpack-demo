@@ -24,7 +24,18 @@ const getStyleLoaders = (pre) => {
         },
       },
     },
-    pre,
+    pre && {
+      loader: pre,
+      options:
+        pre === "less-loader"
+          ? {
+              lessOptions: {
+                modifyVars: { "@primary-color": "#1da57a" },
+                javascriptEnabled: true,
+              },
+            }
+          : {},
+    },
   ].filter(Boolean);
 };
 
@@ -43,48 +54,52 @@ module.exports = {
   },
   module: {
     rules: [
-      // 处理css
       {
-        test: /\.css$/,
-        use: getStyleLoaders(),
-      },
-      {
-        test: /\.less$/,
-        use: getStyleLoaders("less-loader"),
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: getStyleLoaders("sass-loader"),
-      },
-      {
-        test: /\.styl$/,
-        use: getStyleLoaders("stylus-loader"),
-      },
-      // 处理图片
-      {
-        test: /\.(jpe?g|png|gif|webp|svg)/,
-        type: "asset",
-        parser: {
-          dataUrlCondition: {
-            maxSize: 10 * 1024,
+        oneOf: [
+          // 处理css
+          {
+            test: /\.css$/,
+            use: getStyleLoaders(),
           },
-        },
-      },
-      // 处理其他资源
-      {
-        test: /\.(woff2?|ttf)/,
-        type: "asset/resource",
-      },
-      // 处理js
-      {
-        test: /\.jsx?$/,
-        include: path.resolve(__dirname, "../src"),
-        loader: "babel-loader",
-        options: {
-          cacheDirectory: true,
-          cacheCompression: false,
-          plugins: isProduction ? [] : ["react-refresh/babel"],
-        },
+          {
+            test: /\.less$/,
+            use: getStyleLoaders("less-loader"),
+          },
+          {
+            test: /\.s[ac]ss$/,
+            use: getStyleLoaders("sass-loader"),
+          },
+          {
+            test: /\.styl$/,
+            use: getStyleLoaders("stylus-loader"),
+          },
+          // 处理图片
+          {
+            test: /\.(jpe?g|png|gif|webp|svg)/,
+            type: "asset",
+            parser: {
+              dataUrlCondition: {
+                maxSize: 10 * 1024,
+              },
+            },
+          },
+          // 处理其他资源
+          {
+            test: /\.(woff2?|ttf)/,
+            type: "asset/resource",
+          },
+          // 处理js
+          {
+            test: /\.jsx?$/,
+            include: path.resolve(__dirname, "../src"),
+            loader: "babel-loader",
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+              plugins: isProduction ? [] : ["react-refresh/babel"],
+            },
+          },
+        ],
       },
     ],
   },
@@ -125,6 +140,26 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: "all",
+      cacheGroups: {
+        // react react-dom react-router-dom一起打包成一个文件
+        // antd单独打包
+        // 剩下的再单独打包
+        react: {
+          test: /[\\/]node_modules[\\/]react(.*)?[\\/]/,
+          name: "chunk-react",
+          priority: 40,
+        },
+        antd: {
+          test: /[\\/]node_modules[\\/]antd(.*)?[\\/]/,
+          name: "chunk-antd",
+          priority: 30,
+        },
+        libs: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "chunk-libs",
+          priority: 20,
+        },
+      },
     },
     runtimeChunk: {
       name: (entrypoint) => `runtime~${entrypoint.name}.js`,
@@ -175,4 +210,5 @@ module.exports = {
     hot: true, //开启HMR
     historyApiFallback: true, //解决前端路由刷新404
   },
+  performance: false, //关闭性能分析，提升打包速度
 };
