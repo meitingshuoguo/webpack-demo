@@ -6,6 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "./dist"),
     filename: "js/[name].js",
+    clean: true,
   },
   module: {
     rules: [
@@ -47,6 +48,11 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)$/,
         loader: "./loaders/file-loader/index.js",
+        type: "javascript/auto", //阻止webpack对图片资源的默认处理。只使用当前loader来处理。否则会有重复。
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
