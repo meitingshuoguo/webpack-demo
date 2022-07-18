@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
-const TestPlugin = require("./plugins/test-plugin");
+// const TestPlugin = require("./plugins/test-plugin");
+const BannerWebpackPlugin = require("./plugins/banner-webpack-plugin");
 
 module.exports = {
   entry: "./src/main.js",
@@ -62,7 +63,10 @@ module.exports = {
     new HtmlPlugin({
       template: path.resolve(__dirname, "public/index.html"),
     }),
-    new TestPlugin(),
+    // new TestPlugin(),
+    new BannerWebpackPlugin({
+      author: "dadada",
+    }),
   ],
-  mode: "development",
+  mode: "production",
 };
