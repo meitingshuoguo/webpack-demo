@@ -4,6 +4,7 @@ const HtmlPlugin = require("html-webpack-plugin");
 const BannerWebpackPlugin = require("./plugins/banner-webpack-plugin");
 const CleanWebpackPlugin = require("./plugins/clean-webpack-plugin");
 const AnalyzeWebpackPlugin = require("./plugins/analyze-webpack-plugin");
+const InlineWebpackPlugin = require("./plugins/Inline-webpack-plugin");
 
 module.exports = {
   entry: "./src/main.js",
@@ -71,6 +72,15 @@ module.exports = {
     // }),
     new CleanWebpackPlugin(),
     new AnalyzeWebpackPlugin(),
+    new InlineWebpackPlugin([/runtime(.*)\.js$/g]),
   ],
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
+    runtimeChunk: {
+      name: (entrypoint) => `runtime~${entrypoint.name}.js`,
+    },
+  },
   mode: "production",
 };
